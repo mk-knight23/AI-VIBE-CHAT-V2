@@ -1,6 +1,6 @@
 # 🤖 Multi-Provider AI Chat
 
-A modern, feature-rich AI chat application supporting 27+ AI providers with 100+ free models. Built with Next.js, featuring real-time streaming, theme support, and a unified interface for all major AI APIs.
+A modern, feature-rich AI chat application supporting 27+ AI providers with 100+ free r models. Built with Next.js, featuring real-time streaming, theme support, and a unified interface for all major AI APIs.
 
 ## 🚀 Live Demo
 
