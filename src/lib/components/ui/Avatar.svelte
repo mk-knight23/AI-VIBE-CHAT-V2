@@ -5,7 +5,7 @@
   export let size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' = 'md'
   export let shape: 'circle' | 'square' = 'circle'
   export let fallback: 'initials' | 'icon' | 'user' | 'bot' = 'initials'
-  export let status?: 'online' | 'offline' | 'away' | 'busy'
+  export let status: 'online' | 'offline' | 'away' | 'busy' | undefined = undefined
   export let statusColor: string = '#00d9ff'
 
   // State

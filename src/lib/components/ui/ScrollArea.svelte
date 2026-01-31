@@ -34,8 +34,7 @@
     })
   }
 
-  // Expose scroll container
-  $$props = { scrollContainer }
+  // Expose scroll container via export
 
   // Cleanup
   onDestroy(() => {
@@ -46,7 +45,7 @@
 <div
   bind:this={scrollContainer}
   class={`
-    overflow-hidden
+    overflow-hidden custom-scroll
     ${height === 'full' ? 'h-full' : typeof height === 'string' ? `h-[${height}]` : ''}
     ${width === 'full' ? 'w-full' : typeof width === 'string' ? `w-[${width}]` : ''}
     relative
@@ -63,7 +62,7 @@
     <slot />
   </div>
 
-  {/* Scrollbar */}
+  <!-- Scrollbar -->
   {#if scrollbars === 'vertical' || scrollbars === 'both'}
     <div
       class={`
@@ -79,7 +78,7 @@
     </div>
   {/if}
 
-  {/* Scroll-to-top button */}
+  <!-- Scroll-to-top button -->
   {#if scrollContainer && scrollContainer.scrollTop > 100}
     <button
       on:click={smoothScrollToTop}
@@ -94,26 +93,26 @@
 </div>
 
 <style>
-  div[bind:this]::-webkit-scrollbar {
+  .custom-scroll::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
 
-  div[bind:this]::-webkit-scrollbar-track {
+  .custom-scroll::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  div[bind:this]::-webkit-scrollbar-thumb {
+  .custom-scroll::-webkit-scrollbar-thumb {
     background: #e2e8f0;
     border-radius: 9999px;
     transition: background 0.2s;
   }
 
-  div[bind=this]::-webkit-scrollbar-thumb:hover {
+  .custom-scroll::-webkit-scrollbar-thumb:hover {
     background: #00d9ff;
   }
 
-  div[bind:this]::-webkit-scrollbar-corner {
+  .custom-scroll::-webkit-scrollbar-corner {
     background: transparent;
   }
 </style>

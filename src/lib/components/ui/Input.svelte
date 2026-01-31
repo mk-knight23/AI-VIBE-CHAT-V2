@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { createEventDispatcher } from 'svelte'
 
   // Props
   export let value = ''
@@ -15,52 +15,54 @@
   // Refs
   let inputRef: HTMLInputElement
 
+  const dispatch = createEventDispatcher()
+
+  // Generate unique ID for label association
+  const inputId = 'input-' + Math.random().toString(36).substr(2, 9)
+
   // Focus management
-  function focus() {
+  export function focus() {
     inputRef?.focus()
   }
 
-  function blur() {
+  export function blur() {
     inputRef?.blur()
   }
 
   // Events
   function handleInput(event: Event) {
     const target = event.target as HTMLInputElement
-    $$dispatch('input', { value: target.value })
+    dispatch('input', { value: target.value })
   }
 
   function handleChange(event: Event) {
     const target = event.target as HTMLInputElement
-    $$dispatch('change', { value: target.value })
+    dispatch('change', { value: target.value })
   }
 
   function handleFocus(event: FocusEvent) {
-    $$dispatch('focus', event)
+    dispatch('focus', event)
   }
 
   function handleBlur(event: FocusEvent) {
-    $$dispatch('blur', event)
+    dispatch('blur', event)
   }
 
   function handleKeyPress(event: KeyboardEvent) {
-    $$dispatch('keypress', event)
+    dispatch('keypress', event)
   }
 
   function handleKeyDown(event: KeyboardEvent) {
-    $$dispatch('keydown', event)
+    dispatch('keydown', event)
   }
 
   function handleKeyUp(event: KeyboardEvent) {
-    $$dispatch('keyup', event)
+    dispatch('keyup', event)
   }
-
-  // Expose focus function
-  $$props = { focus }
 </script>
 
 {#if label}
-  <label class="block text-sm font-medium text-gray-700 mb-1.5">
+  <label for={inputId} class="block text-sm font-medium text-gray-700 mb-1.5">
     {label}
     {#if required}
       <span class="text-red-500 ml-1">*</span>
@@ -70,6 +72,7 @@
 
 <div class="relative">
   <input
+    id={inputId}
     bind:value
     {placeholder}
     {type}

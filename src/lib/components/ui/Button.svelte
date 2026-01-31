@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte'
+
   // Props
   export let variant: 'primary' | 'secondary' = 'primary'
   export let size: 'sm' | 'md' | 'lg' = 'md'
@@ -6,6 +8,8 @@
   export let loading = false
   export let type: 'button' | 'submit' | 'reset' = 'button'
   export let fullWidth = false
+
+  const dispatch = createEventDispatcher()
 
   // Class builders
   $: baseClasses = 'font-medium transition-all duration-200 select-none focus:outline-none focus:ring-2 focus:ring-offset-2'
@@ -30,7 +34,7 @@
   // Events
   function handleClick(event: MouseEvent) {
     if (disabled || loading) return
-    $$dispatch('click', event)
+    dispatch('click', event)
   }
 </script>
 

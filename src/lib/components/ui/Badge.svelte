@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte'
+
   // Props
   export let variant: 'default' | 'secondary' | 'success' | 'warning' | 'error' | 'info' = 'default'
   export let size: 'sm' | 'md' = 'md'
@@ -7,9 +9,11 @@
   export let closable = false
   export let closed = false
 
+  const dispatch = createEventDispatcher()
+
   // Events
   function handleClose() {
-    $$dispatch('close')
+    dispatch('close')
   }
 
   // Class builders
