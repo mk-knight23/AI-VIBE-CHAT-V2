@@ -1,0 +1,141 @@
+{
+  "version": "2.0.0",
+  "lockedAt": "2025-01-31T13:02:00Z",
+  "project": "AI-VIBE-CHAT-V2",
+  "stack": {
+    "framework": "SvelteKit 2.x",
+    "ui": "Svelte 5 with runes",
+    "styling": "Tailwind CSS 4",
+    "components": "shadcn-svelte",
+    "state": "TanStack Query + Svelte stores",
+    "forms": "formsnap + zod",
+    "icons": "lucide-svelte",
+    "testing": "Playwright + Vitest"
+  },
+  "theme": {
+    "name": "Minimalist Light with Neon Accents",
+    "colors": {
+      "bg-primary": "#ffffff",
+      "bg-secondary": "#f8fafc",
+      "bg-tertiary": "#f1f5f9",
+      "accent-cyan": "#00d9ff",
+      "accent-purple": "#b829f7",
+      "text-primary": "#0f172a",
+      "text-secondary": "#64748b",
+      "border": "#e2e8f0"
+    },
+    "typography": {
+      "sans": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "layout": {
+      "sidebarWidth": "240px",
+      "chatMaxWidth": "900px",
+      "borderRadius": "4px"
+    }
+  },
+  "architecture": {
+    "pattern": "SvelteKit Universal App",
+    "rendering": "Server-rendered with client-side hydration",
+    "reactivity": "Svelte 5 Runes ($state, $derived, $effect)",
+    "layers": {
+      "ui": "Svelte Components (.svelte)",
+      "state": "TanStack Query + Svelte stores",
+      "api": "SvelteKit +server.ts",
+      "providers": "Class-based adapters with factory pattern"
+    }
+  },
+  "folderStructure": {
+    "src/lib/components": ["chat/", "ui/", "settings/"],
+    "src/lib/stores": "Svelte stores",
+    "src/lib/queries": "TanStack Query",
+    "src/lib/providers": "LLM adapters",
+    "src/lib/utils": "Helpers",
+    "src/routes/api": ["chat/+server.ts", "providers/+server.ts"],
+    "src/routes/+page.svelte": "Home/chat",
+    "src/routes/settings/+page.svelte": "Settings",
+    "static/": ["manifest.json", "icons/"],
+    "tests/": ["unit/", "e2e/"]
+  },
+  "namingConventions": {
+    "components": "PascalCase.svelte",
+    "routes": "+page.svelte, +layout.svelte",
+    "server": "+server.ts",
+    "stores": "camelCase.ts",
+    "utils": "camelCase.ts"
+  },
+  "features": {
+    "providers": "27+ providers to port from legacy",
+    "models": "100+ models",
+    "streaming": "SSE with ReadableStream",
+    "chat": {
+      "messages": "TanStack Query for history",
+      "input": "Floating input bar",
+      "bubbles": "User with cyan border, AI gray background"
+    },
+    "sessions": {
+      "sidebar": true,
+      "create": true,
+      "switch": true,
+      "delete": true,
+      "clear": true
+    },
+    "settings": {
+      "panel": true,
+      "modelSelector": true,
+      "themeToggle": false,
+      "promptTemplates": false
+    },
+    "new": {
+      "exportChat": true,
+      "promptLibrary": true
+    }
+  },
+  "apiRoutes": {
+    "/api/chat": "POST - Send message (streaming)",
+    "/api/providers": "GET - List providers",
+    "/api/providers/health": "GET - Health check",
+    "/api/validate-key": "POST - Validate API key"
+  },
+  "qualityStandards": {
+    "build": "Must pass npm run build",
+    "typeCheck": "Must pass npm run check",
+    "bundleSize": "< 400 KB",
+    "firstLoad": "< 2s",
+    "testCoverage": "≥ 80%",
+    "lighthouse": "≥ 90 all categories"
+  },
+  "providerInterface": {
+    "name": "string",
+    "chat": "(request: ChatRequest) => Promise<ChatResponse>",
+    "stream": "(request: ChatRequest) => ReadableStream",
+    "validateKey": "(key: string) => Promise<boolean>"
+  },
+  "successCriteria": {
+    "featureParity": "100% of providers working",
+    "bundleSizeReduction": "-30% vs legacy",
+    "buildTime": "≤ legacy build time",
+    "lighthouse": "≥ 90 all categories",
+    "testCoverage": "≥ 80%"
+  },
+  "nonGoals": [
+    "Reducing provider count",
+    "Real-time collaboration",
+    "Voice/video features",
+    "Mobile native apps"
+  ],
+  "sourceDocuments": [
+    "rebuild-docs/01-rebuild-overview.md",
+    "rebuild-docs/03-rebuild-architecture.md",
+    "rebuild-docs/04-rebuild-stack-strategy.md",
+    "rebuild-docs/05-rebuild-ui-ux-plan.md",
+    "rebuild-docs/06-rebuild-feature-matrix.md",
+    "rebuild-docs/07-rebuild-folder-structure-plan.md",
+    "rebuild-docs/08-rebuild-api-layer-plan.md",
+    "rebuild-docs/09-rebuild-state-flow.md",
+    "rebuild-docs/11-rebuild-quality-standards.md"
+  ],
+  "legacyStatus": "ISOLATED",
+  "legacyLocation": "/legacy",
+  "rebuildMode": "FRESH_FROM_SPEC"
+}

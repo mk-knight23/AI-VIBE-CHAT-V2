@@ -1,0 +1,1 @@
+export type { RequestHandler } from './$types.js'
