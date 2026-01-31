@@ -52,15 +52,20 @@
       status: 'sending'
     })
 
+    // Build messages array from store
+    const currentMessages = $chatStore.messages.map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }))
+
     // Send to API
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: content,
-          providerId: 'mock',
-          modelId: 'mock-model',
+          messages: currentMessages,
+          model: 'mock-model',
           stream: false
         })
       })
@@ -74,7 +79,11 @@
       // Update assistant message with response
       chatStore.updateMessage(assistantMessageId, {
         content: data.content || 'I received your message.',
-        status: 'sent'
+        status: 'sent',
+        metadata: {
+          model: data.model,
+          tokens: data.tokens
+        }
       })
     } catch (error) {
       chatStore.updateMessage(assistantMessageId, {
