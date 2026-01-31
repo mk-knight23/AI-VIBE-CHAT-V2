@@ -79,7 +79,6 @@
     {disabled}
     {readonly}
     {required}
-    {error}
     bind:this={inputRef}
     on:input={handleInput}
     on:change={handleChange}

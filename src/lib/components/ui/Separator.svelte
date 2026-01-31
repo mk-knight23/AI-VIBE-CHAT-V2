@@ -33,4 +33,4 @@
   role={decorative ? 'separator' : undefined}
   aria-orientation={ariaOrientation}
   aria-hidden={decorative}
-/>
+></div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount, onDestroy } from 'svelte'
 
   // Props
   export let height: 'auto' | 'full' | string = 'auto'
@@ -74,7 +74,7 @@
         bind:this={scrollbarThumb}
         class="w-full h-full bg-gray-300 rounded-full group-hover:bg-cyan-500 transition-colors"
         style="transform: translateY(var(--scroll-y));"
-      />
+      ></div>
     </div>
   {/if}
 

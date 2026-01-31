@@ -116,7 +116,7 @@ export class StreamingHelper {
     delay: number = 1000
   ): Promise<T> {
     return new Promise(async (resolve, reject) => {
-      let lastError: Error
+      let lastError: Error | undefined
 
       for (let i = 0; i <= maxRetries; i++) {
         try {
@@ -131,7 +131,7 @@ export class StreamingHelper {
         }
       }
 
-      reject(lastError)
+      reject(lastError || new Error('All retries failed'))
     })
   }
 
