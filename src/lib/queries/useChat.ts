@@ -57,7 +57,7 @@ async function fetchSessionMessages(sessionId: string): Promise<SessionMessagesR
 
 // Create the useSessionMessages hook
 export function useSessionMessages(sessionId: string) {
-  return createQuery({
+  return createQuery(() => ({
     queryKey: ['chat', 'sessions', sessionId, 'messages'],
     queryFn: () => fetchSessionMessages(sessionId),
     enabled: !!sessionId,
@@ -65,7 +65,7 @@ export function useSessionMessages(sessionId: string) {
       ...data,
       messages: data.messages.sort((a, b) => a.timestamp - b.timestamp)
     })
-  })
+  }))
 }
 
 // Send a chat message
@@ -92,7 +92,7 @@ export function useChat(options?: {
   onStreamStart?: () => void
   onStreamEnd?: () => void
 }) {
-  const mutation = createMutation({
+  const mutation = createMutation(() => ({
     mutationFn: sendChatMessage,
     onSuccess: (data, variables) => {
       // Update session message count
@@ -116,7 +116,7 @@ export function useChat(options?: {
         options.onError(error)
       }
     }
-  })
+  }))
 
   // Stream a message
   async function streamMessage(request: ChatRequest) {
@@ -235,7 +235,7 @@ export function useChat(options?: {
 
 // Clear chat session
 export function useClearChat() {
-  return createMutation({
+  return createMutation(() => ({
     mutationFn: async (sessionId: string) => {
       const response = await fetch(`/api/chat/sessions/${sessionId}`, {
         method: 'DELETE'
@@ -255,12 +255,12 @@ export function useClearChat() {
       // Invalidate query
       queryClient.invalidateQueries({ queryKey: ['chat', 'sessions', sessionId, 'messages'] })
     }
-  })
+  }))
 }
 
 // Create a new chat session
 export function useCreateChatSession() {
-  return createMutation({
+  return createMutation(() => ({
     mutationFn: async (title?: string) => {
       const response = await fetch('/api/chat/sessions', {
         method: 'POST',
@@ -280,5 +280,5 @@ export function useCreateChatSession() {
       // Update session store
       sessionStore.createSession(data.title)
     }
-  })
+  }))
 }

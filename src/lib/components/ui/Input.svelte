@@ -80,8 +80,6 @@
     {readonly}
     {required}
     bind:this={inputRef}
-    on:input={handleInput}
-    on:change={handleChange}
     on:focus={handleFocus}
     on:blur={handleBlur}
     on:keypress={handleKeyPress}

@@ -54,7 +54,7 @@ export function useProviders(options?: {
   enabled?: boolean
   refetchInterval?: number
 }) {
-  return createQuery({
+  return createQuery(() => ({
     queryKey: ['providers'],
     queryFn: fetchProviders,
     select: (data: ProvidersResponse) => {
@@ -65,7 +65,7 @@ export function useProviders(options?: {
       }
     },
     ...options
-  })
+  }))
 }
 
 // Refetch providers
