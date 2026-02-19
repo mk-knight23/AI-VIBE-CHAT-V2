@@ -59,6 +59,9 @@
       content: msg.content
     }))
 
+    // Set loading state
+    chatStore.setLoading(true)
+
     // Send to API
     try {
       const apiKey = import.meta.env.VITE_API_CHAT_KEY
@@ -105,6 +108,9 @@
         status: 'failed'
       })
       console.error('Failed to send message:', error)
+    } finally {
+      // Always clear loading state
+      chatStore.setLoading(false)
     }
   }
 
