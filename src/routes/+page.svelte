@@ -2,6 +2,7 @@
   import { Button, Input, Card, ScrollArea, Avatar, Badge, Separator } from '$lib/components/ui'
   import { chatStore, type Message } from '$lib/stores/chatStore'
   import { useChat } from '$lib/queries/useChat'
+  import { safeText } from '$lib/security/sanitize.js'
 
   // Local state for input
   let inputValue = ''
@@ -60,12 +61,25 @@
 
     // Send to API
     try {
+      const apiKey = import.meta.env.VITE_API_CHAT_KEY
+
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+
+      // Add API key if configured (for client-side demo purposes)
+      // In production, this should go through a server-side proxy
+      if (apiKey) {
+        headers['x-api-key'] = apiKey
+      }
+
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           messages: currentMessages,
           model: 'mock-model',
+          provider: 'mock',
           stream: false
         })
       })
@@ -174,7 +188,8 @@
               <!-- Message Content -->
               <div class="flex flex-col {message.role === 'user' ? 'items-end' : 'items-start'} max-w-[80%]">
                 <Card class="p-3 {message.role === 'user' ? 'bg-[var(--bg-secondary)] border-l-4 border-l-[var(--accent-cyan)]' : 'bg-[var(--bg-tertiary)]'}">
-                  <p class="text-[var(--text-primary)] whitespace-pre-wrap">{message.content}</p>
+                  <!-- Use safeText to prevent XSS - Svelte auto-escapes, but this adds explicit safety -->
+                  <p class="text-[var(--text-primary)] whitespace-pre-wrap">{safeText(message.content)}</p>
                   {#if message.status === 'sending'}
                     <span class="text-xs text-[var(--text-secondary)] mt-1">Sending...</span>
                   {:else if message.status === 'failed'}

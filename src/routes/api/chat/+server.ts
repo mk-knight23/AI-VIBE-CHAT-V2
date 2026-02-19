@@ -1,27 +1,52 @@
 import { json, error } from '@sveltejs/kit'
 import type { RequestHandler } from './$types.js'
-import { getProvider } from '$lib/providers/providerRegistry.js'
+import { getProvider, providerRegistry } from '$lib/providers/providerRegistry.js'
 import { StreamingHelper } from '$lib/providers/streamingHelper.js'
-import type { ChatRequest } from '$lib/providers/types.js'
+import { requireAuth } from '$lib/security/auth.js'
+import {
+  chatRequestSchema,
+  isValidProvider,
+  isValidModel,
+  type ChatRequest
+} from '$lib/security/validation.js'
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
+    // Require authentication
+    requireAuth({ request })
+
     // Parse request body
-    const body = await request.json() as ChatRequest
-    const { messages, model, stream = true } = body
+    const body = await request.json()
 
-    // Validate required fields
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      throw error(400, 'Messages array is required and cannot be empty')
+    // Validate request body with Zod schema
+    const validatedBody = chatRequestSchema.safeParse(body)
+    if (!validatedBody.success) {
+      const errors = validatedBody.error.errors
+        .map(e => `${e.path.join('.')}: ${e.message}`)
+        .join(', ')
+      throw error(400, `Invalid request: ${errors}`)
     }
 
-    if (!model) {
-      throw error(400, 'Model parameter is required')
+    const { messages, model, stream = true, provider: requestedProvider } = validatedBody.data
+
+    // Determine provider - from request parameter or default to 'mock'
+    // NEVER parse from user message content (security fix)
+    const providerName = requestedProvider || 'mock'
+
+    // Validate provider name against available providers
+    const availableProviders = providerRegistry
+      .getEnabledProviders()
+      .map(entry => entry.metadata.name)
+
+    if (!isValidProvider(providerName, availableProviders)) {
+      throw error(400, `Invalid provider: '${providerName}' is not available`)
     }
 
-    // Get provider name from the first message (or use default)
-    const systemMessage = messages.find(msg => msg.role === 'system')
-    const providerName = systemMessage?.content.match(/provider[:\s]+(\w+)/i)?.[1] || 'mock'
+    // Validate model name against available models for the provider
+    const availableModels = providerRegistry.getAvailableModels(providerName)
+    if (!isValidModel(model, availableModels)) {
+      throw error(400, `Invalid model: '${model}' is not available for provider '${providerName}'`)
+    }
 
     // Get provider adapter
     const provider = getProvider(providerName)
@@ -29,10 +54,13 @@ export const POST: RequestHandler = async ({ request }) => {
       throw error(404, `Provider '${providerName}' not found`)
     }
 
+    // Build chat request
+    const chatRequest: ChatRequest = { messages, model, stream }
+
     // Check if streaming is requested and supported
     if (stream) {
       // Create SSE stream
-      const stream = provider.stream(body)
+      const stream = provider.stream(chatRequest)
 
       return new Response(
         new ReadableStream({
@@ -94,7 +122,7 @@ export const POST: RequestHandler = async ({ request }) => {
       )
     } else {
       // Non-streaming response
-      const response = await provider.chat(body)
+      const response = await provider.chat(chatRequest)
       return json(response)
     }
   } catch (error) {
