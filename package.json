@@ -2,6 +2,7 @@
 	"name": "ai-vibe-chat",
 	"private": true,
 	"version": "0.0.1",
+	"description": "High-performance AI chat interface inspired by ChatGPT, built with SvelteKit 5 and Tailwind CSS 4.",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
